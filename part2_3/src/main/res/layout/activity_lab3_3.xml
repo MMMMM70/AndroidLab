@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:text="hello world"
         android:background="#FF0000"
-        android:textColor="#FFFFF"
+        android:textColor="#FFFFFF"
         android:padding="16dp"
         android:visibility="invisible"/>
     <Button
