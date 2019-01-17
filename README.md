@@ -122,7 +122,7 @@ db.insert("USER_TB", null, values);
 ```java
 Cursor c = db.query("USER_TB", new String[]{"name", "phone"}, "ID=?", new String[]{"mina"}, null, null, null);
 ```
-
+<br>
 ### 8.2 Realm을 이용한 데이터 영속화
 #### 8.2.1 Realm 소개
 SQLite와 마찬가지로 안드로이드 앱에서 데이터 영속화 목적으로 사용하는 로컬 데이터베이스 <br>
@@ -198,7 +198,7 @@ MemoVO vo = mRealm.where(MemoVO.class).equalTo("Title", title).findFirst(); //�
 * \<uses-permission> : 퍼미션이 선언된 앱을 이용하려면 선언
 
 > AndroidManifest.xml에 새로운 퍼미션을 선언
-```java
+```xml
 <permission android:name="com.test.permission.SOME_PERMISIION"
   android:lable="SOME Permission" // 퍼미션 이름
   android:description="@String/permission" // 퍼미션에 대한 설명(사용자에게 보이는 문자열)
@@ -206,7 +206,7 @@ MemoVO vo = mRealm.where(MemoVO.class).equalTo("Title", title).findFirst(); //�
 ```
 
 > 컴포넌트에 퍼미션 적용
-```java
+```xml
 <activity android:name=.SomeActivity"
   android:permission="com.text.permission.SOME_PERMISSION">
   <intent-filter>
@@ -217,7 +217,7 @@ MemoVO vo = mRealm.where(MemoVO.class).equalTo("Title", title).findFirst(); //�
 ```
 
 > 보호된 컴포넌트를 이용하는 앱은 AndroidManifest.xml에 \<uses-permission>이 등록되어 있어야함
-```java
+```xml
 <uses-permission android:name="com.test.permission.SOME_PERMISSION"/>
 ```
 
@@ -233,4 +233,109 @@ MemoVO vo = mRealm.where(MemoVO.class).equalTo("Title", title).findFirst(); //�
 
 ![permission](https://user-images.githubusercontent.com/23471262/51177753-dcb5a980-1903-11e9-9c2c-8f18496198da.JPG)
 
+### 9.2 파일에 읽고 쓰기
+#### 9.2.1 외부 저장 공간 이용
+> 스마트폰에서 외부 저장 공간을 제공하는지 판단
+``` java
+String state = Environment.getExternalStorageState(); // 외부 저장 공간 상태
+if(state.equals(Environment.MEDIA_MOUNTED)) { // 상태값 일치하면 외부 저장 공간 제공된다는 의미
+  if(state.equals(Environment.MEDIA_MOUNTED_READ_ONLY)){ // 일치하면 파일을 읽거나 쓸 수 있는 상황이라는 의미
+    externalStorageReadable = true;
+    externalStorageWritable = false;
+   }
+   else{
+    externalStorageReadable = true;
+    externalStorageWritable = true;
+   }
+}else{
+  externalStorageReadable = externalStorageWritable = false;
+}
+```
 
+> 퍼미션 설정
+```xml
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 파일을 쓰려면 -->
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 파일을 읽으려면 -->
+```
+
+> 외부 저장 공간 파일에 데이터 쓰기
+``` java
+FileWriter writer; // 문자열 데이터를 저장하기 위해 FileWriter 사용
+try{
+    //외부 저장 공간 root 하위에 myApp이라는 폴더 경로 획득
+    String dirPathe = Environment.getExternalStorageDirectory().getAbsolutePath()+"/myApp";
+    File dir = new File(dirPathe);
+
+    //폴더가 없다면 새로 만들어줌
+    if(!dir.exists()){
+        dir.mkdir();
+    }
+    //myApp폴더 밑에 myfile.txt 파일 지정
+    File file = new File(dir + "/myfile.txt");
+    // File tempFile = File.createTempFile("IMG", ".jpg", dir); // 파일명 중복되지 않게
+    
+    //파일이 없다면 새로 만들어 준다
+    if(!file.exists()){
+        file.createNewFile();
+    }
+
+    //파일에 쓰기
+    writer = new FileWriter(file, true);
+    writer.write(content);
+    writer.flush();
+    writer.close();
+} 
+catch (Exception e){
+    e.printStackTrace();
+}
+```
+
+> 외부 저장 공간 파일을 읽기
+``` java
+File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/myApp/myfile.txt");
+
+try{
+    BufferedReader reader = new BufferedReader(new FileReader(file));
+    StringBuffer buffer = new StringBuffer();
+    String line;
+    while((line=reader.readLine()) != null){
+        buffer.append(line);
+    }
+    textView.setText(buffer.toString());
+    reader.close();
+}
+catch (Exception e){
+    e.printStackTrace();
+}
+```
+#### 9.2.2 내부 저장 공간 이용
+<br>
+### 9.3 SharedPreferences와 앱 설정 자동화
+#### 9.3.1 SharedPreferences
+앱의 데이터를 영속적으로 저장하기 위한 클래스. DBMS 방식의 데이터 영속화는 테이블 구조를 저장하지만, SharedPreferences는 데이터를 간단하게 키-값(key-value) 성격으로 저장. 저장 데이터는 파일(XML)로 저장되지만, 개발자가 직접 파일을 읽고 쓰는 코드를 작성하지 않고 SharedPreferences 객체를 이용해서 간단하게 이용 가능
+
+> getPreferences() 함수는 별도의 파일명을 지정하지 않으므로 자동으로 액티비티 이름의 파일내에 저장함. 결국, 하나의 액티비티만을 위한 저장 공간이 되어 다른 액티비티에서는 데이터를 이용할 수 없음
+```java
+SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE); //모드가 자기 앱 내에서 사용. 외부 앱에서 접근 불가로 설정
+```
+> getSharedPreferences()는 다른 액티비티나 컴포넌트들이 데이터를 공유해서 이용할 수 있음. 데이터를 각각의 파일로 나누어 구분하여 저장하고자 할 때 사용
+```java
+SharedPreferences sharedPref = getSharedPreferences("my_prefs", Context.MODE_PRIVATE); // 매개변수 파일명 지정
+```
+> PreferenceManager.getDefaultSharedPreferences()함수 기본으로 앱의 패키지명을 파일명으로 사용함
+``` java
+SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+```
+SharedPreferences로 데이터를 저장하려면 Editor 클래스의 함수를 이용함. Editor 클래스의 putter 함수를 이용하여 키-값 형태로 데이터를 저장함
+``` java
+SharedPreferences.Editor editor = sharedPref.edit();
+editor.putString("data1", "hello"); // 문자열 데이터 타입 함수
+editor.pputInt("data2", 100); // 숫자 데이터 타입 함수
+editor.commit(); // 저장한 데이터 최종 반영 함수
+```
+
+저장된 데이터를 획득할 때는 SharedPreference 클래스의 getter 함수 이용함
+```java
+String data1 = sharedPref.getString("data1", "none");
+int data2 = sharedPref.getInt("data2", 0);
+```
