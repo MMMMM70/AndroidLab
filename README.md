@@ -412,23 +412,26 @@ AdapterView를 이용하려면 Adapter 클래스를 활용해야 함.
 Adapter 클래스는 Adapter 타입으로 표현되는 클래스를 지칭하며, 라이브러리에서 ArrayAdapter, SimpleAdapter, CursorAdapter 제공됨 <br>
 ![image](https://user-images.githubusercontent.com/23471262/51370601-fc82e280-1b3a-11e9-9a05-f40a33e9fa0e.png)
 
-#### 10.1.2 라이브러리의 Adapter
+#### [10.1.2 라이브러리의 Adapter](/part4_10/src/main/java/com/ming/part4_10/MainActivity.java)
 **ArrayAdapter** <br>
 **SimpleAdapter**<br>
 **CursorAdapter**<br>
 
-### [10.2 커스텀 Adapter](0cceb1b1a94675f9f577f67c63f018658782a0ec)
+### [10.2 커스텀 Adapter](/part4_10/src/main/)
 문자열 이상의 ListView를 만들어야 한다면 개발자가 직접 커스텀 Adapter를 만들어서 적용해야 함
 * 개발자 알고리즘대로 항목의 데이터가 설정되어야할 때
 * 개발자 알고리즘대로 항목별 뷰의 이벤트를 다르게 처리해야할 때
 * 개발자 알고리즘대로 항목별 레이아웃을 다르게 적용해야할 때
 
-VO 작성
+[VO 작성](/part4_10/src/main/java/com/ming/part4_10/DriveVO.java)
+      
 > 커스텀 Adapter를 만들려면 항목별 데이터를 추상화한 VO 클래스를 정의
 
-Adapter 만들기
-> 커스텀 Adapter 작성하려면 라이브러리에서 제공하는 Adapter 중 하나를 상속받아야 함. BaseAdapter 또는 ArrayAdapter,SimpleAdapter 등.
-> 생성자를 작성하고 기본적으로 getCount() 함수와 getView() 함수를 작성해야 함. 해당 함수는 내부적으로 자동 호출됨
+[Adapter 만들기](/part4_10/src/main/java/com/ming/part4_10/DriveAdapter.java)
+> 커스텀 Adapter 작성하려면 라이브러리에서 제공하는 Adapter 중 하나를 상속받아야 함<br>
+BaseAdapter 또는 ArrayAdapter,SimpleAdapter 등<br>
+생성자를 작성하고 기본적으로 getCount() 함수와 getView() 함수를 작성해야 함<br>
+해당 함수는 내부적으로 자동 호출됨
 ```java
 Context context;
 int resId;
