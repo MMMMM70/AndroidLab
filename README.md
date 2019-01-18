@@ -341,14 +341,14 @@ int data2 = sharedPref.getInt("data2", 0);
 많은 앱이 스마트폰의 환경설정과 비슷한 UI로 환경설정 화면을 제공함. 그러한 스타일로 앱의 설정 화면을 제공해준다면 직접 UI를 구성하지 않고도 PreferenceFragment 클래스의 도움을 받아 쉽게 작성할 수 있음
 
 > 설정 화면을 위한 XML 파일을 준비하고 res 하위에 "xml"이라는 폴더에 만듬. 그리고 설정 XML 파일에서 태그들로 설정화면을 구성함
-* <PreferenceScreen> : 설정 화면 단위. 중첩 가능하며 중첩된 내용은 별도의 화면에 나옴
-* <PreferenceCategory> : 설정 여러 개를 시각적으로 묶어서 표현
-* <CheckboxPreference> : 체크박스가 나오는 설정
-* <EditTextPrefernece> : 글 입력을 위한 설정
-* <ListPreference> : 항목 다이얼로그를 위한 설정
-* <MutiSelectListPreference> : 항목 다이얼로그인데 체크박스가 자동 추가되어 여러 선택 가능
-* <RingtonPreference> : 알림음 선택을 위한 설정
-* <SwitchPreference> : 스위치를 이용한 설정
+* \<PreferenceScreen> : 설정 화면 단위. 중첩 가능하며 중첩된 내용은 별도의 화면에 나옴
+* \<PreferenceCategory> : 설정 여러 개를 시각적으로 묶어서 표현
+* \<CheckboxPreference> : 체크박스가 나오는 설정
+* \<EditTextPrefernece> : 글 입력을 위한 설정
+* \<ListPreference> : 항목 다이얼로그를 위한 설정
+* \<MutiSelectListPreference> : 항목 다이얼로그인데 체크박스가 자동 추가되어 여러 선택 가능
+* \<RingtonPreference> : 알림음 선택을 위한 설정
+* \<SwitchPreference> : 스위치를 이용한 설정
   
 #### 9.3.3 앱 설정 자동화 적용
 **PreferenceFragment** <br>
