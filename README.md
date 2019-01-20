@@ -30,7 +30,6 @@
 * anim : 애니메이션을 위한 XML
 * raw : 바이트 단위로 직접 이용되는 이진 파일
 * mipmap : 앱 아이콘 이미지
-
 #### 7.2.1 리소스 폴더명 조건 명시법
 #### 7.2.2 DisplayMetrics
 >개발자 코드에서 직접 스마트폰의 크기 정보를 획득해야 하는 경우 DisplayMetrics 클래스 사용
@@ -71,7 +70,6 @@ while(cursor.moveToNext()){
  }
  ```
 > moveToNext() 함수를 이용하여 행을 선택하고, 선택된 행의 getString() 함수를 이용하여 열 데이터를 가져옴
-
 #### 8.1.2 SQLiteOpenHelper 클래스
 데이터베이스 관리만을 목적으로 하는 클래스. 
 데이터 저장이나 획득 등의 코드는 SQLiteDatabase 클래스를 이용하여 insert, select 작업을 하고, 테이블 생성이나 스키마 변경 등의 작업은 SQLiteOpenHelper 클래스로 일원화하는 구조 <br>
@@ -103,7 +101,6 @@ public class DBHelper extends SQLiteOpenHelper {
 DBHelper helper = new DBHelper(this); // 객체 
 SQLiteDatabase db = helper.getWritableDatabase();
 ```
-
 #### 8.1.3 inert(), query(), update(), delete() 함수 이용
 >  rawQuery(), execSQL() 함수는 개발자가 직접 SQL문을 매개변수로 주어야 하지만, 해당 함수들은 SQL문을 만들기 위한 정보만 매개변수로 주면 자동으로 SQL문을 만들어 실행해줌
 * insert(String table, String nullColumnHack, ContentValues values)
@@ -122,7 +119,7 @@ db.insert("USER_TB", null, values);
 ```java
 Cursor c = db.query("USER_TB", new String[]{"name", "phone"}, "ID=?", new String[]{"mina"}, null, null, null);
 ```
-<br>
+
 ### 8.2 Realm을 이용한 데이터 영속화
 #### 8.2.1 Realm 소개
 SQLite와 마찬가지로 안드로이드 앱에서 데이터 영속화 목적으로 사용하는 로컬 데이터베이스 <br>
@@ -131,7 +128,6 @@ SQLite와 마찬가지로 안드로이드 앱에서 데이터 영속화 목적�
 > SQLite와 가장 큰 차이는 ORM(Object-Relational Mappings)을 제공한다는 것.(Hibernate나 iBatis 같은 것) <br>
 > SQLite는 데이터의 저장과 획득 등의 작업이 SQL문으로 이루어지지만, Realm은 자바 객체를 해석해 그 객체의 데이터를 그대로 저장, 획득해 줌.
 > Realm은 안드로이드만을 목적으로 하지 않고, 다양한 곳에서 모바일 데이터베이스를 목적으로 함. 또한 속도면에서 훨씬 더 빠름
-
 #### 8.2.2 Realm 사용 설정
 플러그인 방식으로 이용해야해서 그레이들 파일에 설정해야 함. 프로젝트 수준의 그레이들 파일에 의존성을 설정해야 함
 > 프로젝트명으로 된 그레이들 파일이 프로젝트 수준임. 해당 파일에 의존성 설정을 해야 함. 설정하면 realm 플러그인이 설치됨
@@ -145,7 +141,6 @@ SQLite와 마찬가지로 안드로이드 앱에서 데이터 영속화 목적�
 ```java
  apply plugin : 'realm-android'
 ```
-
 #### 8.2.3 Realm 사용
 > Relam이 기본 ORM을 목적으로 하므로 Realm이 관리할 VO(Value-Object) 클래스를 만들어줌 
 ```java
@@ -173,6 +168,7 @@ mRealm.executeTransaction(new Realm.Transaction(){
     }
 });
 ```
+
 > Realm 객체를 이용해 저장된 데이터 획득. Relam에서 제공하는 findFirst()함수를 이용해 첫 번째 데이터를 가져옴
 ``` java
 Realm mRealm = Realm.getDefaultInstance(); // Relam 객체 획득
@@ -231,7 +227,7 @@ MemoVO vo = mRealm.where(MemoVO.class).equalTo("Title", title).findFirst(); //�
 > 특정 기능을 시스템에서 보호하고 있어 앱에서 해당 기능을 사용할 때 \<uses-permission>을 선언하지 않으면 에러 발생함.
 예로 외부 저장 공간에 파일을 읽거나 쓸 때. 안드로이드는 관련된 퍼미션을 묶어서 관리하고 사용자에게 그룹 단위로 알려줌
 
-![permission](https://user-images.githubusercontent.com/23471262/51177753-dcb5a980-1903-11e9-9c2c-8f18496198da.JPG)
+![permission](https://user-images.githubusercontent.com/23471262/51177753-dcb5a980-1903-11e9-9c2c-8f18496198da.JPG) <br>
 
 ### 9.2 파일에 읽고 쓰기
 #### 9.2.1 외부 저장 공간 이용
@@ -309,7 +305,7 @@ catch (Exception e){
 }
 ```
 #### 9.2.2 내부 저장 공간 이용
-<br>
+
 ### 9.3 SharedPreferences와 앱 설정 자동화
 #### 9.3.1 SharedPreferences
 앱의 데이터를 영속적으로 저장하기 위한 클래스. DBMS 방식의 데이터 영속화는 테이블 구조를 저장하지만, SharedPreferences는 데이터를 간단하게 키-값(key-value) 성격으로 저장. 저장 데이터는 파일(XML)로 저장되지만, 개발자가 직접 파일을 읽고 쓰는 코드를 작성하지 않고 SharedPreferences 객체를 이용해서 간단하게 이용 가능
@@ -339,3 +335,122 @@ editor.commit(); // 저장한 데이터 최종 반영 함수
 String data1 = sharedPref.getString("data1", "none");
 int data2 = sharedPref.getInt("data2", 0);
 ```
+#### 9.3.2 앱 설정 자동화
+앱의 환경설정(카카오톡 알림을 소리 아니면 진동으로 할 것인지)을 위해서 액티비티에서 설정 화면을 구성하고, 화면에서 발생하는 다양한 사용자 이벤트를 처리하여 설정한 데이터를 영속적으로 저장해야함. 이러한 부분을 대행해주는 것이 앱 설정 자동화임
+<br>
+많은 앱이 스마트폰의 환경설정과 비슷한 UI로 환경설정 화면을 제공함. 그러한 스타일로 앱의 설정 화면을 제공해준다면 직접 UI를 구성하지 않고도 PreferenceFragment 클래스의 도움을 받아 쉽게 작성할 수 있음
+
+> 설정 화면을 위한 XML 파일을 준비하고 res 하위에 "xml"이라는 폴더에 만듬. 그리고 설정 XML 파일에서 태그들로 설정화면을 구성함
+* \<PreferenceScreen> : 설정 화면 단위. 중첩 가능하며 중첩된 내용은 별도의 화면에 나옴
+* \<PreferenceCategory> : 설정 여러 개를 시각적으로 묶어서 표현
+* \<CheckboxPreference> : 체크박스가 나오는 설정
+* \<EditTextPrefernece> : 글 입력을 위한 설정
+* \<ListPreference> : 항목 다이얼로그를 위한 설정
+* \<MutiSelectListPreference> : 항목 다이얼로그인데 체크박스가 자동 추가되어 여러 선택 가능
+* \<RingtonPreference> : 알림음 선택을 위한 설정
+* \<SwitchPreference> : 스위치를 이용한 설정
+  
+#### 9.3.3 앱 설정 자동화 적용
+**PreferenceFragment** <br>
+설정 XML 파일을 적용하려면 PreferenceFragment를 상속받는 개발자 서브 클래스를 만들어야 함
+> PreferenceFragment 서브 클래스의 onCreate() 함수 내에서 addPreferencesFromResource() 함수 호출만으로 XML 파일을 적용 가능함
+``` java
+public class SettingPreferenceFragment extends PreferenceFragment {
+  @Override
+  public void onCreate(final Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    addPreferencesFromResource(R.xml.settings_preference); // 매개변수 설정 XML 파일 정보
+    }
+  }
+```
+> Activity 클래스에서 설정을 위한 PreferenceFragment 서브 클래스를 화면에 띄워야 함. 액티비티의 레이아웃 XML 파일에서 <fragment> 태그를 이용하여 PreferenceFragment 서브 클래스를 등록함. 이때 android:name 속성값에 전체 패키지명을 입력함
+```xml
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@id/setting_fragment"
+  android:name="com.example.test3_9.SettingPreferenceFragment"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"/>
+```
+
+액티비티가 실행되면서 PreferenceFragment 클래스를 화면에 출력하며, PreferenceFragment 클래스에서 설정을 위한 XML을 적용하는 구조
+
+**summary 변경** <br>
+코드에서 자동 저장된 설정 내용을 획득해야 하는 경우. 대표적인 예가 설정 내용에 따라 summary가 변경되는 경우
+> 코드에서 사용자 설정값을 가져와야할 때, SharedPreferences를 이용할 수 있음
+```java
+prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+if(!prefs.getString("sound", "").equals(""))
+  soundPreference.setSummary(prefs.getString("sound", "카톡"));
+```
+
+**Preference 이벤트 처리** <br>
+사용자가 환경을 설정하는 순간에 이벤트 처리가 필요할 때
+> 사용자가 설정을 변경한 순간, 설정의 summary를 변경하는 코드
+```java
+prefs.registerOnSharedPreferenceChangeListener(prefListener);
+```
+```java
+SharedPreferences.OnSharedPreferenceChangeListener prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+  @Override
+  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    if(key.equals("sound")){
+      soundPreference.setSummary(prefs.getString("sound", "카톡"));
+    }
+  }
+};
+```
+
+## 10. AdpterView 활용
+### 10.1 Adapter와 AdapterView
+#### 10.1.1 AdapterView의 구조
+AdapterView는 항목을 나열하는 뷰를 지칭함. 하나의 뷰에 여러 데이터를 나열하고 그중 하나를 사용자에게 선택받는 뷰임.
+AdapterView들은 구조적으로 라이브러리의 AdapterView를 상속받아 작성된 뷰를 의미함<br>
+![image](https://user-images.githubusercontent.com/23471262/51369439-effc8b00-1b36-11e9-8521-5c3b814e80eb.png) <br>
+
+Adapter에게 일을 시키고 Adapter가 AdapterView를 완성해주는 구조임.
+AdapterView를 이용하려면 Adapter 클래스를 활용해야 함.
+Adapter 클래스는 Adapter 타입으로 표현되는 클래스를 지칭하며, 라이브러리에서 ArrayAdapter, SimpleAdapter, CursorAdapter 제공됨 <br>
+![image](https://user-images.githubusercontent.com/23471262/51370601-fc82e280-1b3a-11e9-9a05-f40a33e9fa0e.png)
+
+#### [10.1.2 라이브러리의 Adapter](/part4_10/src/main/java/com/ming/part4_10/MainActivity.java)
+**ArrayAdapter** <br>
+**SimpleAdapter**<br>
+**CursorAdapter**<br>
+
+### [10.2 커스텀 Adapter](/part4_10/src/main/)
+문자열 이상의 ListView를 만들어야 한다면 개발자가 직접 커스텀 Adapter를 만들어서 적용해야 함
+* 개발자 알고리즘대로 항목의 데이터가 설정되어야할 때
+* 개발자 알고리즘대로 항목별 뷰의 이벤트를 다르게 처리해야할 때
+* 개발자 알고리즘대로 항목별 레이아웃을 다르게 적용해야할 때
+
+[VO 작성](/part4_10/src/main/java/com/ming/part4_10/DriveVO.java)
+      
+> 커스텀 Adapter를 만들려면 항목별 데이터를 추상화한 VO 클래스를 정의
+
+[Adapter 만들기](/part4_10/src/main/java/com/ming/part4_10/DriveAdapter.java)
+> 커스텀 Adapter 작성하려면 라이브러리에서 제공하는 Adapter 중 하나를 상속받아야 함<br>
+BaseAdapter 또는 ArrayAdapter,SimpleAdapter 등<br>
+생성자를 작성하고 기본적으로 getCount() 함수와 getView() 함수를 작성해야 함<br>
+해당 함수는 내부적으로 자동 호출됨
+```java
+Context context;
+int resId;
+ArrayList<DriveVO> datas;
+    
+public DriveAdapter(Context context, int resId, ArrayList<DriveVO> datas){
+  //생성자 (Context 항목, 항목 레이아웃 XML 정보, 항목 구성 데이터)
+}
+@Override
+public int getCount() {
+  //전체 항목의 개수를 판단하기 위해 호출
+    return datas.size();
+}
+
+@NonNull
+@Override
+public View getView(int position, View convertView, ViewGroup parent){
+ //한 항목을 구성하기 위해 자동 호출됨
+}
+```
+
+
