@@ -405,11 +405,13 @@ SharedPreferences.OnSharedPreferenceChangeListener prefListener = new SharedPref
 #### 10.1.1 AdapterView의 구조
 AdapterView는 항목을 나열하는 뷰를 지칭함. 하나의 뷰에 여러 데이터를 나열하고 그중 하나를 사용자에게 선택받는 뷰임.
 AdapterView들은 구조적으로 라이브러리의 AdapterView를 상속받아 작성된 뷰를 의미함<br>
+> AdapterView
 ![image](https://user-images.githubusercontent.com/23471262/51369439-effc8b00-1b36-11e9-8521-5c3b814e80eb.png) <br>
 
 Adapter에게 일을 시키고 Adapter가 AdapterView를 완성해주는 구조임.
 AdapterView를 이용하려면 Adapter 클래스를 활용해야 함.
 Adapter 클래스는 Adapter 타입으로 표현되는 클래스를 지칭하며, 라이브러리에서 ArrayAdapter, SimpleAdapter, CursorAdapter 제공됨 <br>
+> Adapter
 ![image](https://user-images.githubusercontent.com/23471262/51370601-fc82e280-1b3a-11e9-9a05-f40a33e9fa0e.png)
 
 #### [10.1.2 라이브러리의 Adapter](/part4_10/src/main/java/com/ming/part4_10/MainActivity.java)
@@ -429,7 +431,7 @@ Adapter 클래스는 Adapter 타입으로 표현되는 클래스를 지칭하며
 
 [Adapter 만들기](/part4_10/src/main/java/com/ming/part4_10/DriveAdapter.java)
 > 커스텀 Adapter 작성하려면 라이브러리에서 제공하는 Adapter 중 하나를 상속받아야 함<br>
-BaseAdapter 또는 ArrayAdapter,SimpleAdapter 등<br>
+BaseAdapter 또는 ArrayAdapter, SimpleAdapter 등<br>
 생성자를 작성하고 기본적으로 getCount() 함수와 getView() 함수를 작성해야 함<br>
 해당 함수는 내부적으로 자동 호출됨
 ```java
@@ -452,5 +454,139 @@ public View getView(int position, View convertView, ViewGroup parent){
  //한 항목을 구성하기 위해 자동 호출됨
 }
 ```
+## 11. 다양한 뷰 활용
+### 11.1 Spannable
+Spannable은 뷰가 아님. 문자열 데이터를 표현하기 위한 클래스들임
+#### 11.1.1 Spannable의 필요성
+안드로이드에서 문자열의 기초 타입은 CharSequence임. String 클래스보다 상위 타입이 있는 이유는 문자열이 데이터뿐만 아니라, UI정보까지 포함해야 하기 때문임. String과 StringBuffer 클래스들은 문자열 데이터 자체만 표현함
+>CharSequence
+![image](https://user-images.githubusercontent.com/23471262/51377041-31983080-1b4d-11e9-9a82-434fd3fe05d7.png)
 
+해당 클래스들도 문자열 데이터를 표현함. 상위 타입은 CharSequence임. Editable, SpannableString, SpannableStringBuilder 클래스는 문자열 데이터와 UI 정보인 Spannable을 함께 표현할 수 있음
+>Spannable
+![image](https://user-images.githubusercontent.com/23471262/51377303-eaf70600-1b4d-11e9-887e-fbb403c26992.png)
+#### [11.1.2 Spannable 적용](/part4_11/src/main/java/com/ming/part4_11/MainActivity.java)
 
+## 14. 인텐트와 구글 기본 앱 연동
+### [14.1 인텐트](/part5_14/src/main/java/com/ming/part5_14/)
+#### 14.1.1 인텐트의 기본 개념
+안드로이드는 액티비티, 서비스, 콘텐츠 프로바이더, 브로드캐스트 리시버 4개의 컴포넌트로 구성됨. 컴포넌트라고 부르는 이유는 자바 클래스로 작성되었더라도 각 클래스가 독립적으로 실행되어 직접 결합이 발생하지 않는 구조이기 때문임. 직접 실행하지 않고 안드로이드 시스템이 의뢰를 받아 컴포넌트를 실행하는 구조로 동작함. 또한 컴포넌트 클래스의 생명주기를 시스템이 관리함. <br>
+컴포넌트를 직접 자바 코드로 생성해서 실행하지 못하고 실행하고자 하는 컴포터넌트 정보를 담은 인텐트를 구성해서 시스템에 넘기면 시스템에서 인텐트 정보를 분석해 맞는 컴포넌트를 실행하는 구조임. 즉, 인텐트는 "컴포넌트를 실행하기 위해 시스템에 넘기는 정보"로 볼 수 있음
+#### 14.1.2 명시적 인텐트, 암시적 인텐트
+인텐트에 어떤 정보를 담는지에 따라 크게 명시적 인텐트와 암시적 인텐트로 구분됨 <br>
+* 명시적 인텐트 <br>
+실행하고자 하는 컴포넌트의 클래스명을 인텐트에 담는 방법. 주로 같은 앱의 컴포넌트를 실행할 때 이용하는 방법
+```java
+Intent intent = new Intent(this, DetailActivity.class); // 생성자에 클래스명
+startActivity(intent); // 인텐트를 시스템에 의뢰하는 함수, 매개변수로 인텐트 객체 
+```
+* 암시적 인텐트 <br>
+클래스명이 아닌 Intent Filter 정보를 활용함. 주로 클래스명을 알 수 없는 외부앱의 컴포넌트를 실행할 때 이용하는 방법
+ Intent Filter는 AndroidManifext.xml 파일에 등록된 컴포넌트 정보임
+```xml
+<activity android:name=".DetailActivity">
+  <intent-filter>
+    <action android:name="com.example.ACTION_VIEW"/>
+    <action android:name="android.intent.category.DEFAULT"/>
+  </intent-filter>
+</activity>
+```
+```java
+ Intent intent = new Intent();
+ intent.setAction("com.example.ACTION_VIEW"); // intent-filter 정보와 동일한 값을 주어 실행
+ startActivity(intent);
+ ```
+ #### 14.1.3 인텐트 필터(Intent Filter)
+ * \<action> : 컴포넌트가 어떤 능력을 갖추고 있는지에 대한 문자열. 개발자가 임의로 지정하는 단어도 가능하며, 라이브러리에서 지정한 문자열을 이용해도 됨
+ * \<category> :  컴포넌트에 대한 추가 정보로 어느 범주의 컴포넌트인지를 표현하는데 사용됨. 개발자가 임의로 지정하는 단어도 가능하지만, 거의 대부분 라이브러리 내에서 준비된 단어를 사용함
+* \<data> : 컴포넌트를 실행하기 위해 필요한 데이터에 대한 상세 정보를 명시하기 위해 사용됨. URL 형식으로 표현되어 android:scheme, android:host, android:port, android:mimeType 등으로 선언됨 <br>
+3가지 모두 등록될 필요는 없으며, 개발자가 원하는대로 등록하여 사용함. action만 등록하거나, action과 data 등록을 많이 함
+#### 14.1.4 Extra 데이터
+목록화면에서 상세보기 화면의 액티비티를 실행할 때 글번호를 넘겨줘야할 때와 같이 컴포넌트를 실행하면서 데이터를 전달해야하는 때
+> 인텐트를 발생하기 전에 putExtra() 함수를 이용하여 데이터를 인텐트 객체에 담아주면 됨.
+key, value의 성격으로 담음. 문자열, 숫자, boolean, 객체 등의 모든 타입의 데이터를 넘길 수 있음 <br>
+ListActivity.java
+```java
+Intent intent = new Intent(this, DetailActivity.class); // ListActivity -> DetailActivity
+intent.putExtra("data1", "hello");
+intent.putExtra("data2", 100);
+startActivity(intent);
+```
+> 자신을 실행했던 인텐트를 얻어서 그 인텐트 객체에 담긴 데이터를 얻는 구조임 <br>
+DetailActivity.java
+```java
+Intent intent = getIntent(); // 인텐트 객체 획득
+String data = intent.getStringExtra("data1"); // 데이터
+int data2 = intent.getIntExtra("data2", 0); // 데이터
+```
+#### 14.1.5 결과 되돌리기
+사용자가 뒤로가기 버튼을 누르지 않고도 자바 코드에서 자동으로 화면이 되돌아오게 처리해야할 때 <br>
+> startActivity() 함수를 이용하지 않고, startActivityForResult() 함수를 이용함
+```java
+Intent intent = new Intent(this, DetailActivity.class);
+startActivityForResult(intent, 10); // 0이상의 숫자를 지정하여 어느 요청이 돌아온 것인지 구분
+```
+> 종료하기 전에 인텐트 객체에 Extra 데이터로 결과 데이터를 담을 수 있음, 자신의 상태를 setResult() 함수를 이용해 지정할 수 있음
+```java
+Intent intent = getIntent();
+intent.putExtra("location", textView.getText().toString());
+setResult(RESULT_OK, intent); // 정상으로 처리되어 되돌린 것임을 명시
+finish(); // 자신을 종료
+```
+액티비티가 종료되면 이전 화면으로 되돌아가며, 이전 액티비티의 onActivityResult() 함수가 자동으로 호출됨
+```java
+@Ovverride
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+// 인텐트를 발생시킨 곳에서 지정한 값, 호출되었던 곳에서 되돌리기 전에 지정한 값
+  if(requestCode==10 && resultCode==RESULT_OK){
+    //...
+   }
+ }
+```
+### [14.2 구글 기본 앱 연동](/part5_14/src/main/java/com/ming/part5_14/Lab14_2Activity.java)
+#### 14.2.1 주소록 앱
+#### 14.2.2 카메라 앱
+**이미지 로딩으로 인한 OutOfMemoryException 문제** <br>
+크기가 큰 데이터를 로딩하다 앱의 메모리 부족으로 실행 시 에러가 발생하는 경우. 대표적으로 이미지 로딩 부분에서 자주 발생함. 이 문제를 피하려면 이미지의 크기를 줄여서 로딩해야 함. 이미지 크기를 줄이는 방법은 API에서 제공함
+```java
+Bitmap bitmap = BitmapFactory.decodeFile(filePath.getAbsolutePath())
+```
+Bitmap은 이미지를 표현하는 클래스로 BitmapFactory 클래스로 생성함. BitmapFactory의 decodeXXX() 함수로 생성하여 이용함.
+* BitmapFactory.decodeByteArray() : byte[] 배열로 Bitmap 생성
+* BitmapFactory.decodeFile() :  파일 경로를 주면 FileInputStream을 만들어서 decodeStream 이용
+* BitmapFactory.decodeResource() : Resource 폴더에 지정된 파일
+* BitmapFactory.decodeStream() : InputStream으로 Bitmap 생성
+> 이때 옵션을 설정할 수 있음. Options 클래스의 inSampleSize 속성값을 설정해서 decodeXXX() 함수의 두 번째 매개변수에 option을 주면 이미지 크기를 자동으로 줄여서 로딩함
+```java
+BitmapFactory.Options imgOptions = new BitmapFactory.Options();
+imgOptions.inSampleSize = 10;
+Bitmap bitmap = BitmapFactory.decodeFile(filePath.getAbsolutePath(), imgOptions);
+```
+> 고정된 값이 아닌 이미지의 크기와 프로그램에서 사용하려는 이미지 크기를 비교해서 비율을 동적으로 결정되게함. 로딩하려는 이미지의 크기를 먼저 얻고, Options에 이미지 정보를 담는 코드임. 이미지의 가로 세로 크기를 얻는 예
+```java
+BitmapFactory.Options options = new BitmapFactory.Options();
+options.inJustDecodeBounds = ture;
+try {
+    InputStream in = new FileInputStream(filePath);
+    BitmapFactory.decodeStream(in, null, options);
+    in.close();
+    in = null;
+}
+catch (Exception e){
+    e.printStackTrace();
+}
+
+final int hegith = options.outHeiht;
+final int width = options.outWidth;
+```
+> 이미지 크기와 개발자가 원하는 이미지 크기를 비교해서 적절한 inSampleSize를 계산
+```java
+if(height > reqHeight || width > reqWidth){
+  final int heightRatio = Math.round((float)height / (float)reqHeight);
+  final int widthRatio = Math.round((float)width / (float)reqWidth);
+  inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+}
+```
+#### 14.2.3 갤러리 앱
+#### 14.2.4 음성인식 앱
+#### 14.2.5 기타 앱 연동
