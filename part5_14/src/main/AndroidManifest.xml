@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ming.part5_14">
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +10,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Lab14_2Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,9 +27,23 @@
         <activity android:name=".DetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.DETAIL" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <!--FileProvider 클래스를 통해 URI에 대하 임시 엑세스 권한을 부여
+            FileProvider 클래스는 Support 라이브러리에서 제공하는 콘텐츠 프로바이더
+            XML로 제공하는 설정을 기반으로 파일들에 대한 Content URI를 생성해줌-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.part5_14.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 
 </manifest>
